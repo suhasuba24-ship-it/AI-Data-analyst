@@ -1,1 +1,3 @@
-model = IsolationForest(contamination=0.05, random_state=42)
+import streamlit as st
+import pandas as pd
+from sklearn.ensemble import IsolationForest
