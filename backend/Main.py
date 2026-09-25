@@ -1,11 +1,16 @@
 from fastapi import FastAPI, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 import io
+
 app = FastAPI()
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 current_df = None
+
 @app.get("/")
 def home():
     return {"message": "Backend Running"}
+
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     global current_df
@@ -15,6 +20,7 @@ async def upload_file(file: UploadFile = File(...)):
     else:
         current_df = pd.read_excel(io.BytesIO(content))
     return {"rows": len(current_df), "columns": list(current_df.columns)}
+
 @app.get("/ask")
 def ask_question(q: str):
     global current_df
